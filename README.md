@@ -1,3 +1,6 @@
+
+![splash](https://github.com/user-attachments/assets/29657696-b878-4187-8474-6aad428ba138)
+
 # 🚀 OpenStroke
 
 > **Ratón y teclado unidos.** Un motor avanzado de gestos de ratón para Windows, ligero, personalizable y de código abierto.
