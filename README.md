@@ -56,3 +56,8 @@ El "cerebro" de tus atajos se guarda en un archivo llamado gestos.yaml. Si lo in
 
 📝 Licencia y Contribución
 Este proyecto es de código abierto. Las contribuciones, sugerencias y reportes de errores (Issues) son más que bienvenidos. ¡Siéntete libre de hacer un Fork y mejorar el motor!
+
+## 🤖 Créditos y Agradecimientos
+
+* **Dirección, Desarrollo y Arquitectura:** exyron
+* **Asistencia Técnica (IA):** Código co-desarrollado, optimizado y documentado con el soporte de **Gemini AI**.
