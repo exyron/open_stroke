@@ -1,0 +1,40 @@
+=== HISTORIAL DE CAMBIOS OPENSTROKE ===
+
+v04.9.5 Alpha - 20 de marzo de 2026
+-----------------------------------
+🚀 NOVEDADES:
+- Modo Portable Añadido: OpenStroke ahora puede ejecutarse desde un pendrive sin dejar rastro en el Registro de Windows, simplemente creando un archivo "portable.txt" junto al ejecutable.
+- Aura de Alto Contraste (Doble Renderizado): Nuevo contorno blanco (configurable) para el trazo, garantizando una visibilidad perfecta sobre fondos oscuros o terminales.
+- Interrogatorio de Registro: El motor ahora lee dinámicamente el Registro de Windows al arrancar para sincronizar el estado real del inicio automático.
+
+⚙️ MEJORAS (UX/UI):
+- HUD Holográfico Reciclable: Implementación de la técnica "Object Pooling" en las notificaciones flotantes. Se acabaron los parpadeos grises y la creación redundante de ventanas al encadenar gestos rápidos.
+- Rediseño de Configuración: La pestaña de Preferencias ahora incluye un visor oscuro en tiempo real para previsualizar el grosor del trazo y su aura.
+
+🐛 CORRECCIONES (BUGS CAZADOS):
+- Escudo de Titanio (API Nativa): Se ha reescrito el núcleo de manipulación de ventanas usando Ctypes. OpenStroke ahora discrimina y protege los procesos vitales del sistema (Progman, WorkerW, Shell_TrayWnd), evitando que el escritorio se minimice a sí mismo y apague monitores secundarios.
+- Autodefensa: Previene el colapso visual evitando que la IA intente aplicar comandos de ventana sobre el propio lienzo invisible de OpenStroke o su HUD.
+- Limpieza de consola: Solucionado un falso positivo en los logs de depuración que mostraba eventos duplicados.
+
+
+=== OPENSTROKE V4.9.5 (RELEASE CANDIDATE) ===
+Fecha de compilación: 19 de Marzo de 2026
+
+🚀 NUEVAS CARACTERÍSTICAS
+- Integración del Motor Geométrico V5.0: Mayor precisión en el reconocimiento de formas complejas, esquinas y trazados proporcionales.
+- Nuevos Comandos Nativos: Añadido "ventana:atras" (navegación inversa Alt+Shift+Tab) y "ventana:arriba" (subir nivel de carpeta mediante retroceso).
+- Escudo Anti-Clones (Mutex): El programa ahora es de Instancia Única, impidiendo que se ejecute dos veces por error.
+- Modo Desarrollador: Añadido el parámetro de arranque "--debug" para generar una consola de diagnóstico en tiempo real.
+
+✨ MEJORAS DE INTERFAZ Y UX
+- Nueva Pestaña de Preferencias: Gestión centralizada para el arranque con Windows, los Poderes Jedi y la pantalla de carga.
+- Pantalla de Carga (Splash Screen) Inteligente: Arranque delegado con imagen Premium, activable de forma opcional desde los ajustes.
+- Visor Holográfico Dinámico: La previsualización geométrica ahora se auto-reproduce al abrir la configuración o al grabar una forma nueva.
+- Animaciones Fluidas: Restaurado el efecto "Fade-Out" (desvanecimiento suave) de la tinta al finalizar un trazado.
+- Paleta Cromática Optimizada: Limpieza de capas redundantes (el Clic Derecho ahora es oficialmente la capa "Normal") para una configuración más intuitiva.
+- Menú "Acerca de...": Nuevo visor integrado en el Systray para consultar la versión actual y el historial de cambios.
+
+🛠️ MOTOR Y ESTABILIDAD
+- Soporte DPI Completo: Escalado perfecto del área de dibujo en monitores modernos y configuraciones multipantalla.
+- Empaquetado Portable: Los iconos nativos, imágenes y textos ahora están incrustados directamente en el núcleo del .exe.
+- Multithreading Seguro: Reescritura del motor de borrado del lienzo para evitar colisiones de hilos entre el radar del ratón y el renderizado gráfico (cuelgues eliminados).

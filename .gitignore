@@ -1,0 +1,29 @@
+# ==========================================
+# REGLAS DE PRIVACIDAD PARA GIT (OPENSTROKE)
+# ==========================================
+
+# 1. Entornos virtuales de Python (Pesan mucho)
+.venv/
+venv/
+env/
+
+# 2. Caché y basura interna de Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# 3. Compilaciones y Ejecutables (No se suben al código fuente)
+build/
+dist/
+*.spec
+Instalador_Final/
+
+# 4. Archivos de configuración de tu propio PyCharm
+.idea/
+.vscode/
+
+# 5. Archivos de pruebas locales
+portable.txt
+
+exyron/
