@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenStroke - Gestos de Ratón para Windows</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;500&family=Montserrat:wght@600;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* 🎨 EL CEREBRO DEL DISEÑO: Variables CSS */
+        :root {
+            /* Fondos Neutros */
+            --bg-principal: #FFFFFF;
+            --bg-secundario: #F8F9FA;
+            --bg-oscuro: #121721;
+            
+            /* Textos */
+            --texto-principal: #2D3748;
+            --texto-claro: #4A5568;
+            --texto-inverso: #FFFFFF;
+            
+            /* Colores de Acento (La explosión de color) */
+            --cyan-energia: #00CFFF;
+            --magenta-creativo: #FF00BF;
+            --naranja-calido: #FF9F00;
+            --verde-neon: #7FFF00;
+        }
+
+        /* RESETEO BÁSICO */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-principal);
+            color: var(--texto-principal);
+            line-height: 1.6;
+        }
+
+        /* TIPOGRAFÍAS ESPECÍFICAS */
+        h1, h2, h3 {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--texto-principal);
+        }
+
+        .codigo-fuente {
+            font-family: 'Fira Code', monospace;
+        }
+
+        /* ESTRUCTURA Y NAVEGACIÓN */
+        header {
+            padding: 2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--bg-principal);
+        }
+
+        .logo-nav {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+            color: var(--texto-principal);
+        }
+
+        .logo-nav span {
+            color: var(--cyan-energia);
+        }
+
+        /* SECCIÓN PRINCIPAL (HERO) */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 4rem 2rem;
+            background: linear-gradient(to bottom, var(--bg-principal), var(--bg-secundario));
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+        }
+
+        /* Un pequeño truco para darle un toque vibrante al título */
+        .hero h1 .destaque {
+            background: linear-gradient(45deg, var(--cyan-energia), var(--magenta-creativo));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--texto-claro);
+            max-width: 600px;
+            margin-bottom: 2.5rem;
+        }
+
+        /* IMAGEN CENTRAL */
+        .imagen-hero-container {
+            max-width: 900px;
+            width: 100%;
+            margin: 2rem auto;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .imagen-hero-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* BOTONES DE ACCIÓN */
+        .botones {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 3rem;
+        }
+
+        .btn {
+            font-family: 'Fira Code', monospace;
+            font-weight: 500;
+            text-decoration: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .btn-primario {
+            background-color: var(--cyan-energia);
+            color: var(--texto-inverso);
+            box-shadow: 0 4px 15px rgba(0, 207, 255, 0.3);
+        }
+
+        .btn-primario:hover {
+            transform: translateY(-2px);
+            background-color: #00b8e6;
+            box-shadow: 0 6px 20px rgba(0, 207, 255, 0.5);
+        }
+
+        .btn-secundario {
+            background-color: transparent;
+            color: var(--texto-principal);
+            border: 2px solid var(--texto-claro);
+        }
+
+        .btn-secundario:hover {
+            border-color: var(--magenta-creativo);
+            color: var(--magenta-creativo);
+        }
+
+        /* SECCIÓN DE CARACTERÍSTICAS */
+        .caracteristicas {
+            padding: 5rem 5%;
+            background-color: var(--bg-principal);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .tarjeta {
+            padding: 2rem;
+            background-color: var(--bg-secundario);
+            border-radius: 12px;
+            border-top: 4px solid var(--naranja-calido);
+            transition: transform 0.3s ease;
+        }
+
+        .tarjeta:hover {
+            transform: translateY(-5px);
+        }
+
+        .tarjeta h3 {
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+
+        /* PIE DE PÁGINA */
+        footer {
+            background-color: var(--bg-oscuro);
+            color: var(--texto-inverso);
+            text-align: center;
+            padding: 3rem 2rem;
+            margin-top: 2rem;
+        }
+
+        footer p {
+            color: #A0AEC0;
+            font-size: 0.9rem;
+        }
+
+        .firma {
+            color: var(--verde-neon);
+            font-family: 'Fira Code', monospace;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-nav">OPEN<span>STROKE</span></div>
+        <a href="https://github.com/exyron/OpenStroke" class="codigo-fuente" style="color: var(--texto-claro); text-decoration: none;">Ver en GitHub</a>
+    </header>
+
+    <section class="hero">
+        <h1>Control total en tus <span class="destaque">manos</span></h1>
+        <p>Gesto Multicolor, Multi Dispositivo, Código Abierto. El motor definitivo que une ratón y teclado para dominar Windows a la velocidad del pensamiento.</p>
+        
+        <div class="botones">
+            <a href="https://github.com/exyron/OpenStroke/releases/latest" class="btn btn-primario">Descargar v0.4.9.6</a>
+            <a href="#caracteristicas" class="btn btn-secundario">Descubrir más</a>
+        </div>
+
+        <div class="imagen-hero-container">
+            <img src="OpenStroke_MultiDispositivo.png" alt="Logotipo y concepto de OpenStroke">
+        </div>
+    </section>
+
+    <section id="caracteristicas" class="caracteristicas">
+        <div class="tarjeta" style="border-top-color: var(--cyan-energia);">
+            <h3>⚡ Gestos Multicapa</h3>
+            <p>Combina pulsaciones de teclado con el botón central o derecho para multiplicar tus atajos. Dibuja en la pantalla y ejecuta comandos complejos al instante.</p>
+        </div>
+        <div class="tarjeta" style="border-top-color: var(--magenta-creativo);">
+            <h3>🛡️ Escudo de Titanio</h3>
+            <p>Arquitectura inteligente basada en la API nativa de Windows (ctypes). El motor detecta automáticamente ventanas críticas y protege el ecosistema para evitar conflictos.</p>
+        </div>
+        <div class="tarjeta" style="border-top-color: var(--verde-neon);">
+            <h3>🎒 100% Portable</h3>
+            <p>Ejecuta el entorno desde un pendrive. Crea un archivo <span class="codigo-fuente">portable.txt</span> y OpenStroke guardará toda tu configuración localmente sin ensuciar el registro de Windows.</p>
+        </div>
+    </section>
+
+    <footer>
+        <h2 style="color: var(--texto-inverso); margin-bottom: 1rem;">Código Abierto. Hecho para creadores.</h2>
+        <p>Desarrollado y diseñado por <span class="firma">exyron</span></p>
+    </footer>
+
+</body>
+</html>
