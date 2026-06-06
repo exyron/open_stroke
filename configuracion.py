@@ -46,8 +46,10 @@ class VentanaConfiguracion:
             self.app.icon.icon = self.app.obtener_imagen_estado(pausado=True)
 
         self.ventana = tk.Toplevel(self.app.root)
-        self.ventana.title("Ajustes de OpenStroke v4.9.5")
-        self.ventana.geometry(getattr(self.app, 'geometria_config', "800x650"))
+        self.ventana.title("Ajustes de OpenStroke v4.9.6")
+
+        # 1. Tamaño por defecto si no hay YAML (Formato amplio para 4K)
+        self.ventana.geometry(getattr(self.app, 'geometria_config', "1800x1100"))
 
         # ==========================================
         # ESTÉTICA: Icono de la ventana de Ajustes
@@ -58,8 +60,13 @@ class VentanaConfiguracion:
             print(f"Aviso icono ajustes: {e}")
         # ==========================================
 
-        self.ventana.geometry(getattr(self.app, 'geometria_config', "800x650"))
-        self.ventana.minsize(1100, 650)
+        # 2. Ajustamos la segunda llamada de seguridad al mismo tamaño
+        self.ventana.geometry(getattr(self.app, 'geometria_config', "1800x1100"))
+
+        # 3. EL CAMBIO CLAVE: Bajamos el minsize regulatorio.
+        # Al ponerlo en 1200x700, permitimos que la ventana se abra a 1800x1100 sin restricciones,
+        # pero impedimos que el usuario la encoja demasiado por accidente.
+        self.ventana.minsize(1200, 700)
         self.ventana.configure(bg="#f0f0f0")
         self.ventana.attributes("-topmost", True)
 
@@ -68,10 +75,19 @@ class VentanaConfiguracion:
         self.construir_interfaz()
 
     def al_cerrar_x(self):
-        # ==========================================
         # 1. LA CAPA DE INVISIBILIDAD: Ocultamos la ventana al instante (UX Perfecta)
-        # ==========================================
         self.ventana.withdraw()
+
+        # ==========================================
+        # NUEVO: RECOLECTOR DE BASURA DE VENTANAS HIJAS
+        # ==========================================
+        # Si el usuario se deja la guía de comandos abierta, la cerramos de forma proactiva
+        if hasattr(self, 'ven_guia_activa') and self.ven_guia_activa.winfo_exists():
+            try:
+                self.ven_guia_activa.destroy()
+            except Exception as e:
+                print(f"Aviso al limpiar ventana de guia: {e}")
+        # ==========================================
 
         # 2. Apagamos los proyectores de cine para que no queden bucles huérfanos
         if hasattr(self, 'id_animacion'):
@@ -355,8 +371,21 @@ class VentanaConfiguracion:
         lienzo.bind("<B1-Motion>", al_arrastrar)
         lienzo.bind("<ButtonRelease-1>", al_soltar)
 
+
     def abrir_guia_comandos(self):
-        ven_guia = tk.Toplevel(self.ventana)
+        # ==========================================
+        # NUEVO: Control Singleton y Vinculación Parental
+        # ==========================================
+        # 1. Si ya existe y está abierta, la traemos al frente
+        if hasattr(self, 'ven_guia_activa') and self.ven_guia_activa.winfo_exists():
+            self.ven_guia_activa.lift()
+            self.ven_guia_activa.focus_force()
+            return
+
+        # 2. Creamos la ventana hija pasándole self.ventana como "Padre"
+        # Si cierras la configuración, esta se cerrará automáticamente.
+        self.ven_guia_activa = tk.Toplevel(self.ventana)
+        ven_guia = self.ven_guia_activa
         ven_guia.title("📚 Guía de Comandos")
 
         # ==========================================
@@ -368,8 +397,7 @@ class VentanaConfiguracion:
             pass
         # ==========================================
 
-        # ven_guia.geometry("450x550") <-- BORRA ESTA LÍNEA Y PON ESTAS:
-        ven_guia.geometry(getattr(self.app, 'geometria_guia', "450x550"))
+        ven_guia.geometry(getattr(self.app, 'geometria_guia', "2000x2000"))
 
         # Le decimos que cuando se cierre, guarde su posición actual en la memoria
         def al_cerrar_guia():
@@ -377,42 +405,51 @@ class VentanaConfiguracion:
             ven_guia.destroy()
 
         ven_guia.protocol("WM_DELETE_WINDOW", al_cerrar_guia)
-
         ven_guia.attributes("-topmost", True)
 
-        texto_guia = """IDIOMAS SOPORTADOS POR OPENSTROKE:
+        texto_guia = """
+    ======================================================================
+                      GUÍA DE COMANDOS DE OPENSTROKE
+    ======================================================================
 
-                1. PROGRAMAS Y ARCHIVOS (Por defecto)
-                Escribe el nombre del ejecutable o la ruta.
-                • notepad
-                • calc
-                • chrome.exe https://google.es
-                • C:\\Windows\\System32
+    1. PROGRAMAS Y ARCHIVOS (Por defecto)
+    Escribe el nombre del ejecutable o la ruta nativa del archivo.
+    • notepad
+    • calc
+    • chrome.exe https://google.es
+    • C:\\Windows\\System32
 
-                2. ATAJOS DE TECLADO (Prefijo "teclas:")
-                Escribe las teclas separadas por comas.
-                • teclas:ctrl,c  (Copiar)
-                • teclas:ctrl,v  (Pegar)
-                • teclas:alt,tab (Cambiar ventana)
+    2. ATAJOS DE TECLADO (Prefijo "teclas:")
+    Simula la pulsación física de un acorde de teclas en el sistema.
+    • teclas:ctrl,c            (Copiar)
+    • teclas:ctrl,v            (Pegar)
+    • teclas:shift,win,left    (Mover ventana al monitor izquierdo)
 
-                3. VENTANAS NATIVAS (Prefijo "ventana:")
-                Manipula la ventana que esté en primer plano.
-                • ventana:minimizar
-                • ventana:maximizar (Restaura si ya está maximizada)
-                • ventana:restaurar_una (Restaura la última minimizada)
-                • ventana:restaurar_todas (Muestra todas de golpe)
-                • ventana:cerrar
-                • ventana:fijar (Always on Top)
-                • ventana:transparente (Modo fantasma 50%)
-                • ventana:siguiente (Salto rápido Alt+Tab)
-                • ventana:atras (Salto inverso Alt+Shift+Tab)
-                • ventana:arriba (Sube una carpeta / Tecla Backspace)
-                """
+    [ TECLAS ESPECIALES DISPONIBLES ]
+    • Modificadores: win, windows, ctrl, shift, alt
+    • Direccionales: up, down, left, right
+    • Sistema:       enter, space, tab, esc
+
+    3. VENTANAS NATIVAS (Prefijo "ventana:")
+    Manipula el entorno de escritorio y la ventana que esté en primer plano.
+    • ventana:minimizar        (Minimiza la ventana actual)
+    • ventana:maximizar        (Maximiza o restaura la ventana actual)
+    • ventana:cerrar           (Cierra la ventana activa - Alt+F4)
+    • ventana:fijar            (Mantiene la ventana siempre al frente)
+    • ventana:transparente     (Aplica un efecto fantasma al 50%)
+    • ventana:siguiente        (Salto rápido a la siguiente ventana)
+    • ventana:atras            (Salto inverso a la ventana anterior)
+    • ventana:arriba           (Sube un nivel de carpeta / Backspace)
+    • ventana:minimizar_todas  (Esconde todo el espacio de trabajo)
+    • ventana:restaurar_todas  (Recupera todas las ventanas minimizadas)
+    • ventana:escritorio       (Muestra u oculta el escritorio - Toggle)
+    ======================================================================"""
 
         txt = tk.Text(ven_guia, font=("Consolas", 10), bg="#2d2d2d", fg="#a9b7c6", padx=15, pady=15)
         txt.insert(tk.END, texto_guia)
         txt.config(state="disabled")
         txt.pack(fill=tk.BOTH, expand=True)
+
 
     def actualizar_desplegable_plantillas(self):
         opciones = list(self.app.plantillas.keys())

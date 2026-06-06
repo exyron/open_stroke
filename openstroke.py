@@ -396,31 +396,84 @@ class OpenStrokeApp:
         print(f"⚡ Ejecutando acción: {comando}")
 
         if comando.startswith("teclas:"):
-            import keyboard as kb
+            from pynput.keyboard import Controller, Key
             import time
 
-            # 1. Respiro largo (150ms) para que el motor pesado de Word asimile el fin del trazo
+            # 1. Respiro vital (150ms) para asimilar el fin del trazo del ratón
             time.sleep(0.15)
 
-            # 2. Formateamos las teclas. Pasamos de "ctrl, r" a "ctrl+r"
-            teclas = comando.split(":")[1].split(",")
-            teclas_unidas = "+".join([t.strip().lower() for t in teclas])
+            teclas_crudas = comando.split(":")[1].split(",")
+            teclado = Controller()
 
-            # 3. Disparo sincronizado a bajo nivel
+            # 2. El Gran Diccionario: Traducimos tu YAML a objetos nativos de pynput
+            mapa_teclas = {
+                "win": Key.cmd,
+                "windows": Key.cmd,
+                "shift": Key.shift,
+                "ctrl": Key.ctrl,
+                "alt": Key.alt,
+                "left": Key.left,
+                "right": Key.right,
+                "up": Key.up,
+                "down": Key.down,
+                "enter": Key.enter,
+                "space": Key.space,
+                "tab": Key.tab,
+                "esc": Key.esc
+            }
+
+            teclas_a_pulsar = []
+            for t in teclas_crudas:
+                tecla_str = t.strip().lower()
+
+                # Si es un modificador o flecha, usamos el objeto de Windows
+                if tecla_str in mapa_teclas:
+                    teclas_a_pulsar.append(mapa_teclas[tecla_str])
+                else:
+                    # Si es una letra normal (ej: 'c', 'v'), la dejamos como texto
+                    teclas_a_pulsar.append(tecla_str)
+
+            # 3. Disparo Orientado a Objetos (El método infalible)
             try:
-                kb.send(teclas_unidas)
-                print(f"⌨️ Teclado inyectado: {teclas_unidas}")
+                # Fase A: Anclamos las teclas al fondo una a una (con un micro-retraso de seguridad)
+                for tecla in teclas_a_pulsar:
+                    teclado.press(tecla)
+                    time.sleep(0.02)
+
+                # Fase B: Mantener la tensión del acorde
+                time.sleep(0.05)
+
+                # Fase C: Soltar los muelles en orden inverso
+                for tecla in reversed(teclas_a_pulsar):
+                    teclado.release(tecla)
+
+                print(f"⌨️ Inyección limpia con pynput: {' + '.join([t.strip() for t in teclas_crudas])}")
             except Exception as e:
-                print(f"⚠️ Error al inyectar teclado: {e}")
+                print(f"⚠️ Error crítico en la inyección: {e}")
 
         # ==========================================
 
         elif comando.startswith("ventana:"):
+            accion = comando.split(":")[1].strip().lower()
+
+            # ==========================================
+            # NUEVO: REDIRECCIÓN INTELIGENTE AL MOTOR DE TECLADO
+            # Reutilizamos el poder de pynput para los atajos del sistema
+            # ==========================================
+            if accion == "minimizar_todas":
+                self.ejecutar_accion("teclas:win,m")
+                return
+            elif accion in ["restaurar_todas", "restaurar_una"]:
+                self.ejecutar_accion("teclas:shift,win,m")
+                return
+            elif accion == "escritorio":
+                self.ejecutar_accion("teclas:win,d")
+                return
+            # ==========================================
+
             import win32gui
             import ctypes
             import os
-
-            accion = comando.split(":")[1].strip().lower()
             hwnd = ctypes.windll.user32.GetForegroundWindow()
 
             # ==========================================
@@ -448,78 +501,37 @@ class OpenStrokeApp:
                 ctypes.windll.user32.ShowWindow(hwnd, 6)
 
             elif accion == "maximizar":
-            # ==========================================
-            # NUEVO: Inteligencia de Maximizar / Restaurar
-            # ==========================================
-            # Preguntamos al sistema si la ventana ya está a pantalla completa
+                # ==========================================
+                # Inteligencia de Maximizar / Restaurar
+                # ==========================================
                 if ctypes.windll.user32.IsZoomed(hwnd):
-                    ctypes.windll.user32.ShowWindow(hwnd, 9)  # 9 es el código para Restaurar
+                    ctypes.windll.user32.ShowWindow(hwnd, 9)  # 9 es Restaurar
                 else:
-                    ctypes.windll.user32.ShowWindow(hwnd, 3)  # 3 es el código para Maximizar
-            # ==========================================
+                    ctypes.windll.user32.ShowWindow(hwnd, 3)  # 3 es Maximizar
 
             elif accion == "restaurar":
                 ctypes.windll.user32.ShowWindow(hwnd, 9)
             elif accion == "cerrar":
                 ctypes.windll.user32.PostMessageW(hwnd, 0x0010, 0, 0)
             elif accion == "fijar":
-                self.fijar_ventana(hwnd)  # AÑADIDO A LOS GESTOS
+                self.fijar_ventana(hwnd)
             elif accion == "transparente":
-                self.hacer_transparente(hwnd)  # AÑADIDO A LOS GESTOS
-
-                # ==========================================
-                # NUEVO: Control total de ventanas minimizadas (Z-Order)
-                # ==========================================
-            elif accion in ["restaurar_todas", "restaurar_una"]:
-                import win32gui
-                minimizadas = []
-
-                # Nuestro radar: Busca ventanas reales que estén escondidas en la barra
-                def escanear_minimizadas(h, lista):
-                    # IsIconic = ¿Está minimizada? / GetWindowText = ¿Tiene título real?
-                    if win32gui.IsWindowVisible(h) and win32gui.IsIconic(h) and win32gui.GetWindowText(h):
-                        lista.append(h)
-                    return True
-
-                win32gui.EnumWindows(escanear_minimizadas, minimizadas)
-
-                if not minimizadas:
-                    print("ℹ️ No hay ventanas minimizadas en la barra de tareas.")
-                else:
-                    if accion == "restaurar_una":
-                        # Sacamos solo la primera (la más reciente que minimizaste)
-                        hwnd_objetivo = minimizadas[0]
-                        ctypes.windll.user32.ShowWindow(hwnd_objetivo, 9)
-                        print(f"⬆️ Restaurada secuencial: {win32gui.GetWindowText(hwnd_objetivo)}")
-                    elif accion == "restaurar_todas":
-                        # Bucle para levantarlas todas de golpe
-                        for h in minimizadas:
-                            ctypes.windll.user32.ShowWindow(h, 9)
-                        print(f"🔄 {len(minimizadas)} ventanas restauradas de golpe.")
-
+                self.hacer_transparente(hwnd)
             elif accion == "siguiente":
-                # Simulamos un toque rápido de Alt+Tab para saltar a la ventana anterior
+                # Simulamos un toque rápido de Alt+Tab
                 import keyboard as kb
                 kb.send('alt+tab')
                 print("⏭️ Salto a la ventana siguiente.")
-            # ==========================================
-            # ==========================================
-            # NUEVO: Salto inverso de ventanas
-            # ==========================================
             elif accion == "atras":
-                # Simulamos Alt+Shift+Tab para ir en dirección contraria
+                # Simulamos Alt+Shift+Tab
                 import keyboard as kb
                 kb.send('alt+shift+tab')
                 print("⏮️ Salto a la ventana anterior (inverso).")
-            # ==========================================
-            # ==========================================
-            # NUEVO: Subir nivel en el árbol de carpetas
-            # ==========================================
             elif accion == "arriba":
                 import keyboard as kb
                 kb.send('backspace')
                 print("📁 Subiendo un nivel en el directorio.")
-            # ==========================================
+                # ==========================================
 
         else:
             # Si es un programa o archivo normal:
@@ -573,8 +585,8 @@ class OpenStrokeApp:
                 self.grosor_linea = int(ajustes.get('grosor', 4))
                 self.grosor_borde = int(ajustes.get('borde', 6))  # <-- ¡NUEVO! Leemos el borde
 
-                self.geometria_config = ajustes.get('geometria_config', '800x650')
-                self.geometria_guia = ajustes.get('geometria_guia', '450x550')
+                self.geometria_config = ajustes.get('geometria_config', '1800x1100')
+                self.geometria_guia = ajustes.get('geometria_guia', '1000x1400')
                 self.geometria_grabar = ajustes.get('geometria_grabar', '500x500')
 
                 self.umbral_tolerancia = float(ajustes.get('tolerancia', 0.35))

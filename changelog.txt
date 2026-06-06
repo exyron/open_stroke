@@ -1,5 +1,22 @@
 === HISTORIAL DE CAMBIOS OPENSTROKE ===
 
+VERSION 0.4.9.7 - 2026-06-06
+============================
+
+CORREGIDO:
+- Resuelto un fallo critico de sincronizacion donde Windows ignoraba teclas modificadoras (Shift) al combinarlas con la tecla Windows en atajos nativos del sistema.
+
+MODIFICADO:
+- Refactorizacion del Motor de Teclado: Migrada la inyeccion de pulsaciones de la libreria 'keyboard' a 'pynput'. Ahora se utilizan objetos nativos (simulacion de hardware real) en lugar de analizadores de texto, garantizando una ejecucion atomica y 100% fiable frente a la API de Windows.
+
+CORREGIDO:
+- Solucionado un conflicto jerarquico en el motor de Tkinter entre las restricciones de 'minsize' y 'geometry' que bloqueaba el redimensionado de las interfaces.
+
+MODIFICADO:
+- Soporte oficial para resoluciones 4K (High DPI). Se ha ampliado el lienzo por defecto de la ventana de Ajustes y la Guia de Comandos para aprovechar monitores de alta densidad, permitiendo visualizar todo el texto sin cortes y con una distribucion limpia.
+
+
+
 v.0.4.9.6. Alpha - 06 de Junio de 2026
 -----------------------------------
 🐛 CORRECCIONES (BUGS CAZADOS):
