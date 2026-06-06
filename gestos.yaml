@@ -4,7 +4,7 @@ ajustes:
   color: '#FF0000'
   geometria_config: 1800x1278+456+456
   geometria_grabar: 611x542+1296+795
-  geometria_guia: 1000x1400+114+114
+  geometria_guia: 1000x1400+418+418
   grosor: 15
   mostrar_splash: true
   poderes_jedi: true
@@ -36,7 +36,7 @@ gestos:
     / ABAJO:
       default: ventana:minimizar
     / ARRIBA:
-      default: ventana:maximizar
+      default: ventana:restaurar_una
     ABAJO ARRIBA - MINIMIZAR TODO:
       default: teclas:win,m
     ANGULO - ARRIBA DERECHA:

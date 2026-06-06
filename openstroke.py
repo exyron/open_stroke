@@ -463,7 +463,7 @@ class OpenStrokeApp:
             if accion == "minimizar_todas":
                 self.ejecutar_accion("teclas:win,m")
                 return
-            elif accion in ["restaurar_todas", "restaurar_una"]:
+            elif accion == "restaurar_todas":
                 self.ejecutar_accion("teclas:shift,win,m")
                 return
             elif accion == "escritorio":
@@ -474,11 +474,37 @@ class OpenStrokeApp:
             import win32gui
             import ctypes
             import os
+
+            # ==========================================
+            # LÓGICA DE RESCATE (Inmune al Escudo)
+            # Actúa antes de leer qué ventana está en primer plano
+            # ==========================================
+            if accion == "restaurar_una":
+                if hasattr(self, 'historial_minimizadas') and self.historial_minimizadas:
+                    ultimo_hwnd = self.historial_minimizadas.pop()
+                    if win32gui.IsWindow(ultimo_hwnd):
+                        ctypes.windll.user32.ShowWindow(ultimo_hwnd, 9)  # 9 es Restaurar
+                        try:
+                            # Forzamos a Windows a darle el foco a la ventana rescatada
+                            ctypes.windll.user32.SetForegroundWindow(ultimo_hwnd)
+                        except:
+                            pass
+                        print(f"🪄 Ventana rescatada. (Quedan {len(self.historial_minimizadas)} en memoria)")
+                    else:
+                        print("⚠️ La ventana que tocaba rescatar ya no existe.")
+                else:
+                    print("⚠️ No hay ventanas en la memoria para rescatar.")
+
+                # IMPORTANTÍSIMO: Salimos de la función aquí para saltarnos el Escudo
+                return
+                # ==========================================
+
             hwnd = ctypes.windll.user32.GetForegroundWindow()
 
             # ==========================================
             # EL ESCUDO DE TITANIO (Puro Ctypes nativo)
             # ==========================================
+
             try:
                 clase_ventana = win32gui.GetClassName(hwnd)
 
@@ -498,7 +524,14 @@ class OpenStrokeApp:
             # ==========================================
 
             if accion == "minimizar":
+                # 1. MEMORIA LIFO: Creamos la lista si no existe y guardamos el DNI de la ventana
+                if not hasattr(self, 'historial_minimizadas'):
+                    self.historial_minimizadas = []
+                self.historial_minimizadas.append(hwnd)
+
+                # 2. Hundimos la ventana
                 ctypes.windll.user32.ShowWindow(hwnd, 6)
+                print(f"⏬ Ventana minimizada y guardada en memoria (Total: {len(self.historial_minimizadas)})")
 
             elif accion == "maximizar":
                 # ==========================================

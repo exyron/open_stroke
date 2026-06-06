@@ -15,6 +15,9 @@ CORREGIDO:
 MODIFICADO:
 - Soporte oficial para resoluciones 4K (High DPI). Se ha ampliado el lienzo por defecto de la ventana de Ajustes y la Guia de Comandos para aprovechar monitores de alta densidad, permitiendo visualizar todo el texto sin cortes y con una distribucion limpia.
 
+NUEVO:
+- Implementada memoria LIFO (Last In, First Out) para la gestion inteligente de ventanas minimizadas.
+- Anadido el comando 'ventana:restaurar_una', que permite rescatar secuencialmente las ventanas que OpenStroke ha minimizado, operando por encima de las restricciones nativas del sistema operativo.
 
 
 v.0.4.9.6. Alpha - 06 de Junio de 2026
