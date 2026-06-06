@@ -70,7 +70,7 @@ class OpenStrokeApp:
 
 
     def __init__(self):
-        print("Iniciando OpenStroke v4.9.5 Alpha...")
+        print("Iniciando OpenStroke v.0.4.9.6 Alpha....")
         self.root = tk.Tk()
         self.root.withdraw()  # 1. Nos ocultamos en las sombras inmediatamente
 
@@ -768,10 +768,7 @@ class OpenStrokeApp:
                     self.gesto_activado = False
                     self.puntos = []  # Vaciamos la memoria de dibujo
 
-                    # Mandamos al clon a hacer el clic real en segundo plano
-                    import threading
-                    threading.Thread(target=self.hacer_clic_real, daemon=True).start()
-
+                    # ¡CURA DEL DOBLE CLIC! Ya no mandamos al clon, Windows hace el clic real
                     return  # Abortamos la misión de OpenStroke
                 # ==========================================
 
@@ -862,8 +859,8 @@ class OpenStrokeApp:
                             # El propio analizador se encargará de lanzar el Fade-Out
                             self.analizar_y_ejecutar()
                         else:
-                            self.hacer_clic_real()
-                            # Si fue un clic normal, borramos los puntitos residuales
+                            # ¡CURA DEL DOBLE CLIC! Eliminamos la llamada a self.hacer_clic_real()
+                            # Si fue un clic normal, solo borramos los puntitos residuales
                             self.root.after(0, lambda: self.canvas.delete("all"))
                     except Exception as e:
                         print(f"❌ Error crítico al ejecutar el gesto: {e}")
