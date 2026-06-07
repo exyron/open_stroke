@@ -63,16 +63,34 @@
             background-color: var(--bg-principal);
         }
 
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px; /* Incrementamos el espacio para absorber el nuevo tamaño */
+        }
+
         .logo-nav {
             font-family: 'Montserrat', sans-serif;
             font-weight: 800;
-            font-size: 1.5rem;
+            font-size: 1.8rem; /* Escalamos un poco el texto para que compense visualmente */
             letter-spacing: 1px;
             color: var(--texto-principal);
         }
 
         .logo-nav span {
             color: var(--cyan-energia);
+        }
+
+        /* MODIFICACIÓN: Control de dimensiones del logotipo */
+        .logo-img {
+            height: 80px; /* Subimos de 45px a 80px para darle la presencia que merece */
+            width: auto;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+
+        .logo-img:hover {
+            transform: scale(1.05); /* Un sutil efecto interactivo al pasar el ratón */
         }
 
         /* SECCIÓN PRINCIPAL (HERO) */
@@ -92,7 +110,6 @@
             letter-spacing: -1px;
         }
 
-        /* Un pequeño truco para darle un toque vibrante al título */
         .hero h1 .destaque {
             background: linear-gradient(45deg, var(--cyan-energia), var(--magenta-creativo));
             -webkit-background-clip: text;
@@ -214,13 +231,16 @@
 <body>
 
     <header>
-        <div class="logo-nav">OPEN<span>STROKE</span></div>
+        <div class="header-left">
+            <img src="OS - Logo Open_Stroke.png" alt="Logo OpenStroke" class="logo-img">
+            <div class="logo-nav">OPEN<span>STROKE</span></div>
+        </div>
         <a href="https://github.com/exyron/OpenStroke" class="codigo-fuente" style="color: var(--texto-claro); text-decoration: none;">Ver en GitHub</a>
     </header>
 
     <section class="hero">
         <h1>Control total en tus <span class="destaque">manos</span></h1>
-        <p>Gesto Multicolor, Multi Dispositivo, Código Abierto. El motor definitivo que une ratón y teclado para dominar Windows a la velocidad del pensamiento.</p>
+        <p>Ratón y Teclado Unidos, Multi-entrada, Código Abierto. El motor definitivo que une ratón y teclado para dominar Windows a la velocidad del pensamiento.</p>
         
         <div class="botones">
             <a href="https://github.com/exyron/OpenStroke/releases/latest" class="btn btn-primario">Descargar v0.4.9.6</a>
@@ -228,7 +248,7 @@
         </div>
 
         <div class="imagen-hero-container">
-            <img src="OpenStroke_MultiDispositivo.png" alt="Logotipo y concepto de OpenStroke">
+            <img src="OpenStroke-Spanish.png" alt="Interfaz y concepto de OpenStroke">
         </div>
     </section>
 

@@ -4,7 +4,7 @@ ajustes:
   color: '#FF0000'
   geometria_config: 1800x1278+456+456
   geometria_grabar: 611x542+1296+795
-  geometria_guia: 1000x1400+418+418
+  geometria_guia: 1000x1400+304+304
   grosor: 15
   mostrar_splash: true
   poderes_jedi: true
@@ -50,7 +50,7 @@ gestos:
     E INVERTIDA:
       default: '"C:/Program Files/Microsoft Office/root/Office16/EXCEL.EXE"'
     O:
-      default: ventana:escritorio
+      default: ventana:minimizar
     RECTA (DER A IZQ) PREVIO:
       default: ventana:atras
     RECTA (IZQ A DERECHA) NEXT:

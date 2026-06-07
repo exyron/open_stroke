@@ -70,7 +70,7 @@ class OpenStrokeApp:
 
 
     def __init__(self):
-        print("Iniciando OpenStroke v.0.4.9.6 Alpha....")
+        print("Iniciando OpenStroke v.0.4.9.7 Alpha....")
         self.root = tk.Tk()
         self.root.withdraw()  # 1. Nos ocultamos en las sombras inmediatamente
 
@@ -395,6 +395,13 @@ class OpenStrokeApp:
 
         print(f"⚡ Ejecutando acción: {comando}")
 
+        # ==========================================
+        # EL NUEVO HUD POR DEFECTO
+        # ==========================================
+        self.mostrar_hud(f"🚀 {comando.upper()}")
+
+
+
         if comando.startswith("teclas:"):
             from pynput.keyboard import Controller, Key
             import time
@@ -477,7 +484,6 @@ class OpenStrokeApp:
 
             # ==========================================
             # LÓGICA DE RESCATE (Inmune al Escudo)
-            # Actúa antes de leer qué ventana está en primer plano
             # ==========================================
             if accion == "restaurar_una":
                 if hasattr(self, 'historial_minimizadas') and self.historial_minimizadas:
@@ -485,19 +491,21 @@ class OpenStrokeApp:
                     if win32gui.IsWindow(ultimo_hwnd):
                         ctypes.windll.user32.ShowWindow(ultimo_hwnd, 9)  # 9 es Restaurar
                         try:
-                            # Forzamos a Windows a darle el foco a la ventana rescatada
                             ctypes.windll.user32.SetForegroundWindow(ultimo_hwnd)
                         except:
                             pass
                         print(f"🪄 Ventana rescatada. (Quedan {len(self.historial_minimizadas)} en memoria)")
+                        self.mostrar_hud(f"🪄 Rescatada ({len(self.historial_minimizadas)} restantes)")
                     else:
                         print("⚠️ La ventana que tocaba rescatar ya no existe.")
+                        self.mostrar_hud("⚠️ Ventana perdida")
                 else:
                     print("⚠️ No hay ventanas en la memoria para rescatar.")
+                    self.mostrar_hud("⚠️ Memoria vacía")
 
-                # IMPORTANTÍSIMO: Salimos de la función aquí para saltarnos el Escudo
                 return
                 # ==========================================
+
 
             hwnd = ctypes.windll.user32.GetForegroundWindow()
 
@@ -532,6 +540,10 @@ class OpenStrokeApp:
                 # 2. Hundimos la ventana
                 ctypes.windll.user32.ShowWindow(hwnd, 6)
                 print(f"⏬ Ventana minimizada y guardada en memoria (Total: {len(self.historial_minimizadas)})")
+
+                # 3. Informamos al usuario visualmente
+                self.mostrar_hud(f"⏬ En memoria ({len(self.historial_minimizadas)})")
+
 
             elif accion == "maximizar":
                 # ==========================================
@@ -769,10 +781,7 @@ class OpenStrokeApp:
             if comando:
                 self.ejecutar_accion(comando)
 
-                # ==========================================
-                # ¡EL TOQUE PREMIUM! Encendemos el HUD Holográfico
-                self.mostrar_hud(f"🚀 {comando.upper()}")
-                # ==========================================
+
         # Cámbialo en los dos sitios donde aparece dentro de analizar_y_ejecutar
         self.root.after(0, lambda: self.desvanecer_linea("trazo", 1.0))
 
@@ -1015,7 +1024,7 @@ class OpenStrokeApp:
         # Cabecera Premium
         tk.Label(self.ventana_acerca, text="OpenStroke", font=("Segoe UI", 20, "bold"), bg="#f0f0f0",
                  fg="#2196F3").pack(pady=(15, 0))
-        tk.Label(self.ventana_acerca, text="Versión 4.9.5 Alpha | Build: 2026.03.17", font=("Segoe UI", 10),
+        tk.Label(self.ventana_acerca, text="Versión 4.9.7 Alpha | Build: 2026.06.07", font=("Segoe UI", 10),
                  bg="#f0f0f0", fg="#555").pack(pady=(0, 10))
         tk.Label(self.ventana_acerca, text="Ratón y Teclado Unidos, Multi-entrada, Código Abierto",
                  font=("Segoe UI", 9, "italic"), bg="#f0f0f0", fg="#888").pack(pady=(0, 15))

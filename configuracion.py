@@ -46,7 +46,7 @@ class VentanaConfiguracion:
             self.app.icon.icon = self.app.obtener_imagen_estado(pausado=True)
 
         self.ventana = tk.Toplevel(self.app.root)
-        self.ventana.title("Ajustes de OpenStroke v4.9.6")
+        self.ventana.title("Ajustes de OpenStroke v4.9.7")
 
         # 1. Tamaño por defecto si no hay YAML (Formato amplio para 4K)
         self.ventana.geometry(getattr(self.app, 'geometria_config', "1800x1100"))
@@ -432,8 +432,9 @@ class VentanaConfiguracion:
 
     3. VENTANAS NATIVAS (Prefijo "ventana:")
     Manipula el entorno de escritorio y la ventana que esté en primer plano.
-    • ventana:minimizar        (Minimiza la ventana actual)
+    • ventana:minimizar        (Minimiza la ventana actual y la guarda en memoria)
     • ventana:maximizar        (Maximiza o restaura la ventana actual)
+    • ventana:restaurar_una    (Rescata la última ventana minimizada por OpenStroke)
     • ventana:cerrar           (Cierra la ventana activa - Alt+F4)
     • ventana:fijar            (Mantiene la ventana siempre al frente)
     • ventana:transparente     (Aplica un efecto fantasma al 50%)
